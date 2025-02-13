@@ -1,0 +1,145 @@
+-- Dados para inclusão no banco de dados do Ecommerce
+
+
+insert into Clientpf (Fname, Minit, Lname, CPF, Address) values 
+	('Maria','M','Silva','12346789011','rua silva de prata, 29, Carangola - Cidade das flores'),
+
+	('Matheus','O','Pimentel','98765432110','rua alameda, 289, Centro - Cidade das flores'),
+           ('Ricardo','F','Silva','45678913981','avenida alameda vinha, 1009, Centro - Cidade das flores'),
+
+        ('Julia','S','França','78912345610','rua lareiras, 861, Centro - Cidade das flores'),
+              ('Roberta','G','Assis','98745631981','avenida koller, 19, Centro - Cidade das flores'),
+            ('Isabela','M','Cruz','65478912312','rua alameda das flores, 28, Centro - Cidade das flores');
+
+
+
+insert into Clientpj (Socialname, CNPJ, Address, Contact) values
+
+	('Mercado Almeida','123456789000101','rua dos pinhais, 73 - Centro - Cidade das flores','11987654321'),
+        ('Escritório dos Caetanos','987654321000101','rua dos pinheiros, 1001 - Centro - Cidade das flores','11987651234'),
+        ('Oficina do João','567891234000101','rua dos cactos, 103 - Centro - Cidade das flores','11912345678'),
+
+        ('Magalhâes e Filhos','918273645000101','rua das araucarias, 7004 - Centro - Cidade das flores','11912348765');
+
+
+
+-- 'Eletrônicos','Vestuário','Brinquedos','Alimentos','Móveis')
+
+insert into product (Pname, Classification_kids, category, avaliação, size, price) values
+
+	('Fone de ouvido',false,'Eletrônicos','4',null,'49.99'),
+        ('Barbie Elsa',true,'Brinquedos','3',null,'60'),
+        ('Body Carters',true,'Vestuário','5',null,'70'),
+
+        ('Microfone Vedo - Youtuber',false,'Eletrônicos','4',null,'109.90'),
+        ('Sofá retrátil',false,'Móveis','3','3x57x80','660'),
+        ('Farinha de arroz',false,'Alimentos','2',null,'11.90'),
+        ('Fire Stick Amazon',false,'Eletrônicos','3',null,'189.9');
+
+
+
+insert into payment (idpayClientpf, idpayClientpj, typePayment, cardname, cardnumber, cardexpiredate) values
+	('1',null,'cartão de crédito','Maria Silva','1234567890987654','2030-11-21'),
+        ('2',null,'cartão de crédito','Matheus Pimentel','9876543210876543','2029-05-01'),
+        ('3',null,'cartão de crédito','Ricardo Silva','1230987654321765','2029-09-09'),
+
+        ('4',null,'cartão de crédito','Julia França','6543210987654321','2033-10-11'),
+        (null,'3','cartão de crédito','Oficina do João','4567890123456789','2028-01-31'),
+
+        (null,'1','cartão de crédito','Mercado Almeida','0987654321987654','2031-11-11');
+ 
+
+
+
+insert into orders (idOrderClientpf, idOrderClientpj, orderStatus, orderDescription, sendValue, paymentCash) values
+	(1,null, default, 'compra via aplicativo', 0, 1),
+        (2,null, default, 'compra via aplicativo', 50, 0),
+        (null,1, default, 'compra via aplicativo', 250, 0),
+	(null,3, default, 'compra via aplicativo', 50, 0),
+
+        (3,null, 'Confirmado', null, 0, 1),
+        (4,null, default, 'compra via site', 150, 0);
+
+                    
+
+-- 'Em preparação para coleta','Na transportadora','Saiu para entrega','Entregue'
+
+insert into delivery (idOrderDel, trackcod, delStatus) values
+
+	(1,1234567890123,'Saiu para entrega'),
+
+        (3,1234567890321,'Entregue'),
+        (5,1234567894321,'Saiu para entrega'),
+        (6,1234567895678,'Entregue'),
+        (4,1234567890654,'Na transportadora'),
+        (2,1234567890789,default);
+
+
+
+
+insert into productOrder (idPOproduct, idPOorder, poQuantity, poStatus) values
+	(1,1,2,null),
+
+        (2,1,1,null),
+        (7,2,3,null),
+        (3,3,2,null),
+        (4,4,2,null),
+        (6,4,5,null),
+        (5,5,1,null),
+        (4,6,1,null),
+
+        (1,6,1,null);
+
+
+insert into storageLocation (storageLocation, quantity) values
+	('Rio de Janeiro', 1000),
+        ('Rio de Janeiro', 500),
+        ('São Paulo', 10),
+        ('São Paulo', 100),
+
+        ('São Paulo', 10),
+        ('Brasilia', 60);
+                        
+
+
+insert into productStorage(idPSproduct, idPSstorage, psQuantity, poStatus) values
+
+	(1, 2, '1000', 'Disponível'),
+        (2, 6, '500', 'Disponível'),
+        (3, 3, '800', 'Disponível'),
+        (4, 1, '200', 'Disponível'),
+        (5, 2, '50', 'Disponível'),
+        (6, 4, '90', 'Disponível'),
+
+	(7, 3, '0', 'Sem Estoque');                   
+                        
+
+
+insert into supplier(SocialName, CNPJ, Contact) values
+	('Almeida e filhos','123456789123456','21985474'),
+        ('Eletrônicos Silva','854519649143457','21985484'),
+        ('Eletrônicos Valma','934567893934695','21975474');
+
+
+insert into productSupplier (idPsSupplier, idPsproduct, Quantity) values
+	(1,1,500),
+        (1,2,400),
+        (2,4,633),
+        (3,3,5),
+ 
+        (2,5,10);
+
+
+insert into seller (SocialName, TradeName, CNPJ, CPF, Contact) values
+	('Tech eletronics',null,'123456789456321',null,'219946287'),
+        ('Boutique Durgas',null,null,'12345678311','219567895'),
+        ('Kids World',null,'456789123654485',null,'1198657484');
+
+
+
+insert into productSeller (idPseller, idPproduct, prodQuantity) values
+	(1,6,80),
+        (2,7,10);
+ 
+                   
+				
