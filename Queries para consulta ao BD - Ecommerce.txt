@@ -1,0 +1,137 @@
+-- Queries para consulta ao Banco de Dados Ecommerce
+use ecommerce;
+
+
+
+
+-- Status dos pedidos por Cliente PF
+
+select idOrder as Pedido, idOrderClientpf as 'ID Cliente PF', concat(fname, ' ', lname) as Cliente, orderStatus as 'Status do Pedido' from orders, clientpf
+
+	where idOrderclientpf = idclientpf;
+    
+
+
+-- Status dos pedidos por Cliente PJ
+
+select idOrder as Pedido, idOrderClientpj as 'ID Cliente PJ', Socialname as Cliente, orderStatus as 'Status do Pedido' from orders, clientpj
+
+	where idOrderclientpj = idclientpj;
+    
+
+
+-- Modo de pagamento dos Clientes PF
+
+select idClientpf as 'ID Cliente PF', concat(Fname,' ',Minit,' ', Lname) as 'Nome Completo', typePayment as 'Forma de pagamento', cardname as 'Nome do Cartão', cardnumber as 'Número do cartão', cardexpiredate as 'Vencimento'
+	
+from payment, clientpf
+
+	where idpayClientpf = idclientpf;
+
+
+
+-- Modo de pagamento dos Clientes PJ
+
+select idClientpj as 'ID Cliente PJ', Socialname as 'Razão Social', typePayment as 'Forma de pagamento', cardname as 'Nome do Cartão', cardnumber as 'Número do cartão', cardexpiredate as 'Vencimento' 
+
+	from payment, clientpj
+
+	where idpayClientpj = idclientpj;
+
+
+-- Quantos pedidos cada cliente PF fez?
+
+
+select idOrderClientpf as 'ID Cliente PF', concat(Fname,' ', Lname) as 'Nome Completo', count(*) as 'Quantidade de pedidos' from orders, clientpf
+
+	where idclientpf = idOrderClientpf
+
+	group by idOrderClientpf;
+    
+
+
+-- Quantos pedidos cada cliente PF fez?
+
+select idOrderClientpj as 'ID Cliente PJ', Socialname as 'Razão Social', count(*) as 'Quantidade de pedidos' from orders, clientpj
+
+	where idclientpj = idOrderClientpj
+
+	group by idOrderClientpj;
+  
+  
+
+-- Algum vendedor é fornecedor também?
+
+select idSupllier as 'ID Fornecedor', idSeller as 'ID Vendedor', f.SocialName as 'Razão Social', f.CNPJ, f.Contact as 'Contato' from supplier f , seller v
+	where f.CNPJ = v.CNPJ;
+    
+
+
+-- Relação de nomes dos fornecedores e nomes dos produtos
+
+select idSupllier as 'ID Fornecedor', SocialName as 'Razão Social', Pname as 'Nome do Produto', Quantity as 'Quantidade' from supplier
+
+	full join productSupplier on idSupllier = idPsSupplier
+
+	join product on idPsproduct = idProduct;
+
+    
+
+
+-- Valor Total (produto+frete) do pedido, identificando o Cliente
+
+select d.idOrder as Pedido, o.idOrderClientpf as 'ID Cliente PF', o.idOrderClientpj as 'ID Cliente PJ', round(sum(e),2) as 'Valor total'
+ 
+	from orders o,
+
+			(select o.idOrder, (r.poQuantity*p.price)+o.sendValue as e 
+
+				from orders o
+
+				join productOrder r  on o.idOrder = r.idPOorder
+
+				join product p on r.idPOproduct = p.idProduct) as d
+
+	where d.idOrder = o.idOrder
+group by d.idOrder
+order by d.idOrder;
+
+
+
+-- Rastreando o pedido do client, pedido número do pedido
+
+select idOrder as Pedido, idOrderClientpf as 'ID Cliente PF', idOrderClientpj as 'ID Cliente PJ', trackcod as 'Código de Rastreamento', delStatus as 'Status da entrega' from orders
+ 
+	join delivery on idOrder = idOrderDel
+    
+	where idOrder = 4;
+    
+
+
+-- Consultando estoque de produto com quantidade mínima (ex: <100)
+
+select idProduct as 'Código do Produto', Pname as 'Nome do Produto', idPSstorage as 'Cód. Estoque', psQuantity as 'Quantidade', poStatus as 'Status do produto' from product
+
+	left join productStorage on idProduct = idPSproduct
+	
+where psQuantity< 100;
+
+
+
+-- Filtrando o Valor Total (produto+frete) do pedido, acima de 400 reais
+select d.idOrder as Pedido, o.idOrderClientpf as 'ID Cliente PF', o.idOrderClientpj as 'ID Cliente PJ', round(sum(e),2) as 'Valor total'
+ 
+	from orders o,
+					(select o.idOrder, (r.poQuantity*p.price)+o.sendValue as e 
+						from orders o
+					join productOrder r  on o.idOrder = r.idPOorder
+
+			join product p on r.idPOproduct = p.idProduct) as d
+
+	where d.idOrder = o.idOrder
+	
+group by d.idOrder
+	
+having sum(e)> 400
+	
+order by d.idOrder;
